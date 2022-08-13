@@ -15,10 +15,9 @@ pip install -r requirements.txt
 Скопируйте файл `.env.Example` и переименуйте его в `.env`.  
 
 Заполните переменные окружения в файле `.env`:  
-`DEVMAN_TOKEN` - API токен с сайта [dvmn.org](https://dvmn.org).  
 `TELEGRAM_TOKEN` - токен телеграм бота.  
-`TELEGRAM_CHAT_ID` - ID телеграм чата.  
 `GOOGLE_APPLICATION_CREDENTIALS` - путь к JSON ключу.
+`GOOGLE_PROJECT_ID` - ID проекта Google.
 
 ### Как запускать
 ```bash
