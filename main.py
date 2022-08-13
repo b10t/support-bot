@@ -1,8 +1,38 @@
 # import requests
 from environs import Env
+from google.cloud import dialogflow
 from telegram import Update
 from telegram.ext import (CallbackContext, CommandHandler, Filters,
                           MessageHandler, Updater)
+
+
+def implicit():
+    from google.cloud import storage
+
+    # If you don't specify credentials when constructing the client, the
+    # client library will look for credentials in the environment.
+    storage_client = storage.Client()
+
+    # Make an authenticated API request
+    buckets = list(storage_client.list_buckets())
+    print(buckets)
+
+
+def detect_intent_texts(project_id, session_id, text, language_code='RU'):
+    session_client = dialogflow.SessionsClient()
+
+    session = session_client.session_path(project_id, session_id)
+
+    text_input = dialogflow.TextInput(
+        text=text, language_code=language_code)
+
+    query_input = dialogflow.QueryInput(text=text_input)
+
+    response = session_client.detect_intent(
+        request={"session": session, "query_input": query_input}
+    )
+
+    return response.query_result.fulfillment_text
 
 
 def create_and_start_bot(telegram_token):
@@ -35,14 +65,24 @@ def help_command(update: Update, context: CallbackContext) -> None:
 
 def echo(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
-    update.message.reply_text(update.message.text)
+    session_id = update.effective_user.id
+    text = update.message.text
+
+    update.message.reply_text(
+        detect_intent_texts(
+            'support-b10t-bot-16246',
+            session_id,
+            text)
+    )
 
 
 if __name__ == '__main__':
     env = Env()
     env.read_env()
 
-    telegram_token = env('TELEGRAM_TOKEN', 'TELEGRAM_TOKEN')
+    telegram_token = env.str('TELEGRAM_TOKEN')
+    # google_application_credentials = env.str('GOOGLE_APPLICATION_CREDENTIALS')
+
     # telegram_chat_id = env.int('TELEGRAM_CHAT_ID', 0)
     # devman_token = env('DEVMAN_TOKEN', 'DEVMAN_TOKEN')
 

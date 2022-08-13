@@ -18,7 +18,7 @@ pip install -r requirements.txt
 `DEVMAN_TOKEN` - API токен с сайта [dvmn.org](https://dvmn.org).  
 `TELEGRAM_TOKEN` - токен телеграм бота.  
 `TELEGRAM_CHAT_ID` - ID телеграм чата.  
-
+`GOOGLE_APPLICATION_CREDENTIALS` - путь к JSON ключу.
 
 ### Как запускать
 ```bash
