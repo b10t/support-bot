@@ -16,8 +16,9 @@ pip install -r requirements.txt
 
 Заполните переменные окружения в файле `.env`:  
 `TELEGRAM_TOKEN` - токен телеграм бота.  
-`GOOGLE_APPLICATION_CREDENTIALS` - путь к JSON ключу.
-`GOOGLE_PROJECT_ID` - ID проекта Google.
+`TELEGRAM_CHAT_ID` - id телеграм чата (для вывода сообщений об ошибках).  
+`GOOGLE_APPLICATION_CREDENTIALS` - путь к JSON ключу.  
+`GOOGLE_PROJECT_ID` - ID проекта Google.  
 
 ### Как запускать
 ```bash
