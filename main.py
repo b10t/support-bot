@@ -1,15 +1,28 @@
 import logging
+from textwrap import dedent
+
 from environs import Env
 from google.cloud import dialogflow
 from telegram import Update
 from telegram.ext import (CallbackContext, CommandHandler, Filters,
                           MessageHandler, Updater)
 
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO,
-)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('support-bot')
+
+
+class BotLogsHandler(logging.Handler):
+    def __init__(self, telegram_bot, telegram_chat_id) -> None:
+        super().__init__()
+
+        self.telegram_chat_id = telegram_chat_id
+        self.telegram_bot = telegram_bot
+
+    def emit(self, record):
+        log_entry = self.format(record)
+        self.telegram_bot.send_message(
+            chat_id=self.telegram_chat_id,
+            text=dedent(log_entry)
+        )
 
 
 def error_handler(update: object, context: CallbackContext) -> None:
@@ -36,7 +49,7 @@ def detect_intent_text(project_id, session_id, text, language_code='RU'):
     return response.query_result.fulfillment_text
 
 
-def create_and_start_bot(telegram_token):
+def create_and_start_bot(telegram_token, telegram_chat_id):
     """Creates and launches a telegram bot."""
     updater = Updater(telegram_token)
 
@@ -45,9 +58,12 @@ def create_and_start_bot(telegram_token):
     dispatcher.add_handler(CommandHandler('start', start))
 
     dispatcher.add_handler(MessageHandler(
-        Filters.text & ~Filters.command, echo))
+        Filters.text & ~Filters.command, process_message))
 
     dispatcher.add_error_handler(error_handler)
+
+    bot_logs_handler = BotLogsHandler(dispatcher.bot, telegram_chat_id)
+    logger.addHandler(bot_logs_handler)
 
     updater.start_polling()
 
@@ -61,8 +77,8 @@ def start(update: Update, context: CallbackContext) -> None:
         f'Добро пожаловать в службу поддержки, {user.first_name}!')
 
 
-def echo(update: Update, context: CallbackContext) -> None:
-    """Echo the user message."""
+def process_message(update: Update, context: CallbackContext) -> None:
+    """Processes a message from the user."""
     session_id = update.effective_user.id
     message_text = update.message.text
 
@@ -78,9 +94,15 @@ def echo(update: Update, context: CallbackContext) -> None:
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        level=logging.WARNING,
+    )
+
     env = Env()
     env.read_env()
 
     telegram_token = env.str('TELEGRAM_TOKEN')
+    telegram_chat_id = env.int('TELEGRAM_CHAT_ID')
 
-    create_and_start_bot(telegram_token)
+    create_and_start_bot(telegram_token, telegram_chat_id)
