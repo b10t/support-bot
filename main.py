@@ -62,12 +62,11 @@ def create_and_start_bot(telegram_token, telegram_chat_id):
 
     dispatcher.add_error_handler(error_handler)
 
-    bot_logs_handler = BotLogsHandler(dispatcher.bot, telegram_chat_id)
-    logger.addHandler(bot_logs_handler)
-
     updater.start_polling()
 
-    updater.idle()
+    return dispatcher.bot
+
+    # updater.idle()
 
 
 def start(update: Update, context: CallbackContext) -> None:
@@ -105,4 +104,7 @@ if __name__ == '__main__':
     telegram_token = env.str('TELEGRAM_TOKEN')
     telegram_chat_id = env.int('TELEGRAM_CHAT_ID')
 
-    create_and_start_bot(telegram_token, telegram_chat_id)
+    telegram_bot = create_and_start_bot(telegram_token, telegram_chat_id)
+
+    bot_logs_handler = BotLogsHandler(telegram_bot, telegram_chat_id)
+    logger.addHandler(bot_logs_handler)
