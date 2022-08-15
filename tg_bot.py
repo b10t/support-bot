@@ -2,10 +2,11 @@ import logging
 from textwrap import dedent
 
 from environs import Env
-from google.cloud import dialogflow
 from telegram import Update
 from telegram.ext import (CallbackContext, CommandHandler, Filters,
                           MessageHandler, Updater)
+
+from google_df_api import detect_intent_text
 
 logger = logging.getLogger('support-bot')
 
@@ -30,23 +31,6 @@ def error_handler(update: object, context: CallbackContext) -> None:
         msg='Exception while handling an update:',
         exc_info=context.error
     )
-
-
-def detect_intent_text(project_id, session_id, text, language_code='RU'):
-    session_client = dialogflow.SessionsClient()
-
-    session = session_client.session_path(project_id, session_id)
-
-    text_input = dialogflow.TextInput(
-        text=text, language_code=language_code)
-
-    query_input = dialogflow.QueryInput(text=text_input)
-
-    response = session_client.detect_intent(
-        request={'session': session, 'query_input': query_input}
-    )
-
-    return response.query_result.fulfillment_text
 
 
 def create_and_start_bot(telegram_token, telegram_chat_id):
@@ -86,7 +70,7 @@ def process_message(update: Update, context: CallbackContext) -> None:
             google_project_id,
             session_id,
             message_text
-        )
+        )  # type: ignore
     )
 
 
