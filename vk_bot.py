@@ -24,7 +24,10 @@ def detect_intent_text(project_id, session_id, text, language_code='RU'):
         request={'session': session, 'query_input': query_input}
     )
 
-    return response.query_result.fulfillment_text
+    if not response.query_result.intent.is_fallback:
+        return response.query_result.fulfillment_text
+
+    return None
 
 
 def process_message(event, vk_api, google_project_id):
@@ -32,17 +35,14 @@ def process_message(event, vk_api, google_project_id):
     session_id = event.user_id
     message_text = event.text
 
-    message_text = detect_intent_text(
-        google_project_id,
-        session_id,
-        message_text
-    )
-
-    vk_api.messages.send(
-        user_id=session_id,
-        message=message_text,
-        random_id=random.randint(1, 1000)
-    )
+    if message_text := detect_intent_text(google_project_id,
+                                          session_id,
+                                          message_text):
+        vk_api.messages.send(
+            user_id=session_id,
+            message=message_text,
+            random_id=random.randint(1, 1000)
+        )
 
 
 if __name__ == '__main__':
