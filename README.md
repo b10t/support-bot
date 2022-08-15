@@ -6,6 +6,11 @@
 - tg_bot.py: чат-бот для Telegram.  
 - vk_bot.py: чат-бот для VK.  
 - create_intent.py: программа для загрузки данных (вопросы, ответы) на DialogFlow.  
+
+### Где протестировать  
+
+[Бот Tg](https://t.me/devman_support_b10t_bot)
+[Бот VK](https://vk.com/im?peers=c1&sel=-215360229)
   
 ### Как установить
 
