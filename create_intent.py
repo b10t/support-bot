@@ -1,3 +1,4 @@
+import enum
 import json
 import logging
 
@@ -51,9 +52,7 @@ if __name__ == '__main__':
     with open('questions.json', 'r') as questions_file:
         training_phrases = json.load(questions_file)
 
-    for phrase in training_phrases:
-        training_intent = training_phrases.get(phrase)
-
+    for phrase, training_intent in training_phrases.items():
         questions = training_intent.get('questions')
         answer = training_intent.get('answer')
 
