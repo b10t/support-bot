@@ -66,8 +66,6 @@ def create_and_start_bot(telegram_token, telegram_chat_id):
 
     return dispatcher.bot
 
-    # updater.idle()
-
 
 def start(update: Update, context: CallbackContext) -> None:
     """Send a message when the command /start is issued."""

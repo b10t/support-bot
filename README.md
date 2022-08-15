@@ -19,6 +19,7 @@ pip install -r requirements.txt
 `TELEGRAM_CHAT_ID` - id телеграм чата (для вывода сообщений об ошибках).  
 `GOOGLE_APPLICATION_CREDENTIALS` - путь к JSON ключу.  
 `GOOGLE_PROJECT_ID` - ID проекта Google.  
+`VK_GROUP_TOKEN` - токен группы VK.  
 
 ### Как запускать
 ```bash
