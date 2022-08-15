@@ -16,9 +16,13 @@ def process_message(event, vk_api, google_project_id):
     session_id = event.user_id
     message_text = event.text
 
-    if message_text := detect_intent_text(google_project_id,
-                                          session_id,
-                                          message_text):
+    is_fallback, message_text = detect_intent_text(
+        google_project_id,
+        session_id,
+        message_text
+    )
+
+    if not is_fallback:
         vk_api.messages.send(
             user_id=session_id,
             message=message_text,

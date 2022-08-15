@@ -65,13 +65,13 @@ def process_message(update: Update, context: CallbackContext) -> None:
 
     google_project_id = env.str('GOOGLE_PROJECT_ID')
 
-    update.message.reply_text(
-        detect_intent_text(
-            google_project_id,
-            session_id,
-            message_text
-        )  # type: ignore
+    _, message_text = detect_intent_text(
+        google_project_id,
+        session_id,
+        message_text
     )
+
+    update.message.reply_text(message_text)
 
 
 if __name__ == '__main__':
