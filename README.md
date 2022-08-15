@@ -42,3 +42,14 @@ python vk_bot.py
 ```bash
 python create_intent.py
 ```
+
+## Пример использования бота
+Пример результата для Telegram:  
+![Sample](https://dvmn.org/filer/canonical/1569214094/323/)
+
+Пример результата для ВКонтакте:  
+![Sample](https://dvmn.org/filer/canonical/1569214089/322/)
+
+## Цель проекта
+
+Код написан в образовательных целях на онлайн-курсе для веб-разработчиков [dvmn.org](https://dvmn.org/modules/)
